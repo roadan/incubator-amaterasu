@@ -151,7 +151,7 @@ class ApplicationMaster extends AMRMClientAsync.CallbackHandler with Logging {
     // Resource requirements for worker containers
     // TODO: this should be per task based on the framework config
     this.capability = Records.newRecord(classOf[Resource])
-    this.capability.setMemory(Math.min(config.taskMem, 512))
+    this.capability.setMemory(Math.min(config.taskMem, 1024))
     this.capability.setVirtualCores(1)
 
     while (!jobManager.outOfActions) {
@@ -212,7 +212,7 @@ class ApplicationMaster extends AMRMClientAsync.CallbackHandler with Logging {
           "/bin/bash ./miniconda.sh -b -p $PWD/miniconda && ",
           s"/bin/bash ${config.spark.home}/bin/load-spark-env.sh && ",
           s"java -cp ${config.spark.home}/jars/*:executor.jar:${config.spark.home}/conf/:${config.YARN.hadoopHomeDir}/conf/ " +
-            "-Xmx512M " +
+            "-Xmx1G " +
             "-Dscala.usejavacp=true " +
             "-Dhdp.version=2.6.1.0-129 " +
             "org.apache.amaterasu.executor.yarn.executors.ActionsExecutorLauncher " +
