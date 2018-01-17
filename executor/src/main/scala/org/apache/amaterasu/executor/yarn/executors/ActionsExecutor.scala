@@ -1,11 +1,12 @@
 package org.apache.amaterasu.executor.yarn.executors
 
-import java.io.ByteArrayOutputStream
+import java.io.{ByteArrayOutputStream, File, FileInputStream}
 import java.net.{InetAddress, URLDecoder}
 
 import scala.collection.JavaConverters._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.apache.amaterasu.common.configuration.ClusterConfig
 import org.apache.amaterasu.common.dataobjects.{ExecData, TaskData}
 import org.apache.amaterasu.common.logging.Logging
 import org.apache.amaterasu.executor.common.executors.ProvidersFactory
@@ -59,18 +60,31 @@ object ActionsExecutorLauncher extends App with Logging {
     case _ => urlses(cl.getParent)
   }
 
+  def getRecursiveListOfFiles(dir: File): Array[File] = {
+    val these = dir.listFiles
+    these ++ these.filter(_.isDirectory).flatMap(getRecursiveListOfFiles)
+  }
+
   val hostName = InetAddress.getLocalHost.getHostName
 
   log.info(s"Hostname resolved to: $hostName")
   val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
 
+  val conf = new ClusterConfig()
+  conf.load(new FileInputStream("./amaterasu.properties"))
+  val files = getRecursiveListOfFiles(new File(s"${conf.spark.home}/jars"))
   log.info("Starting actions executor")
 
   val urls = urlses(getClass.getClassLoader)
 
   log.info("Current classpath is:")
   log.info(urls.mkString("\n"))
+
+  log.info("content of spark jars is: ")
+  log.info("######################### ")
+  files.foreach(f=>println(f.getName))
+
 
   val jobId = this.args(0)
   val master = this.args(1)
