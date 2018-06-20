@@ -17,8 +17,9 @@
 package org.apache.amaterasu.leader.mesos
 
 import org.apache.amaterasu.common.configuration.ClusterConfig
+import org.apache.amaterasu.leader.common.utilities.Args
 import org.apache.amaterasu.leader.mesos.schedulers.JobScheduler
-import org.apache.amaterasu.leader.utilities.{Args, BaseJobLauncher}
+import org.apache.amaterasu.leader.utilities.BaseJobLauncher
 import org.apache.log4j.LogManager
 import org.apache.mesos.Protos.FrameworkID
 import org.apache.mesos.{MesosSchedulerDriver, Protos}

@@ -20,6 +20,7 @@ import java.io.FileInputStream
 
 import org.apache.amaterasu.common.configuration.ClusterConfig
 import org.apache.amaterasu.common.logging.Logging
+import org.apache.amaterasu.leader.common.utilities.Args
 
 
 abstract class BaseJobLauncher extends App with Logging {
